@@ -2,7 +2,7 @@ const Customer = require("../model/customer.model");
 
 const WebhookCustomerCreate = async (req, res) => {
   try {
-    const customer = req.body;
+    const customer = req.body.customer;
     console.log(customer);
     const customerId = customer.id;
     const email = customer.email;
