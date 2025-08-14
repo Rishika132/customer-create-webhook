@@ -40,11 +40,16 @@ const WebhookCustomerCreate = async (req, res) => {
   }
 };
 
+const ALLOWED_SHOP = `${process.env.SHOPIFY_STORE}.myshopify.com`;
 const WebhookProductUpdate = async (req, res) => {
 
   try {
-    const isValid = await sendEmail(req);
-    if (!isValid) return res.status(401).send('Unauthorized');
+    const storeDomain = req.headers['x-shopify-shop-domain'];
+    if (storeDomain !== ALLOWED_SHOP) {
+      console.warn('⚠️ Webhook from unknown store:', storeDomain);
+      return res.status(401).send('Unauthorized store');
+    }
+
     const product = req.body;
     const title = product.title;
 
