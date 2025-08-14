@@ -44,13 +44,13 @@ const ALLOWED_SHOP = `${process.env.SHOPIFY_STORE}.myshopify.com`;
 const WebhookProductUpdate = async (req, res) => {
 
   try {
-    // const storeDomain = req.headers['x-shopify-shop-domain'];
-    // if (storeDomain !== ALLOWED_SHOP) {
-    //   console.warn('⚠️ Webhook from unknown store:', storeDomain);
-    //   return res.status(401).send('Unauthorized store');
-    // }
+    const storeDomain = req.headers['x-shopify-shop-domain'];
+    if (storeDomain !== ALLOWED_SHOP) {
+      console.warn('⚠️ Webhook from unknown store:', storeDomain);
+      return res.status(401).send('Unauthorized store');
+    }
 
-   const product = req.body.product;
+   const product = req.body;
 const title = product.title;
 
     console.log(product);
