@@ -1,5 +1,5 @@
 const Customer = require("../model/customer.model");
-const getCustomerTags = require("../utils/customer");
+const {getCustomerTags} = require("../utils/customer");
 
 const WebhookCustomerCreate = async (req, res) => {
   try {
