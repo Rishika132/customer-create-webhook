@@ -24,7 +24,7 @@ async function getCustomerTags(customerId) {
           "X-Shopify-Access-Token": accessToken,
           "Content-Type": "application/json",
         },
-          timeout: 10000,
+          timeout: 50000,
       }
     );
     return response.data.data.customer?.tags || [];
@@ -50,6 +50,5 @@ async function updateAllCustomerTags() {
     console.error("MongoDB Error:", err);
   }
 }
-
 updateAllCustomerTags();
 module.exports = { getCustomerTags };
