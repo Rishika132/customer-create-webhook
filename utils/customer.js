@@ -1,22 +1,23 @@
 const axios = require("axios");
+const Customer = require("../model/customer.model"); 
+require("dotenv").config();
 
-async function getCustomerData(customerId) {
+async function getCustomerTags(customerId) {
   try {
-    const shopifyDomain = process.env.SHOPIFY_STORE; 
-    const accessToken = process.env.SHOPIFY_ACCESS_TOKEN; 
+    const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
+    const shopifyStore = process.env.SHOPIFY_STORE;
 
     const query = `
       {
         customer(id: "gid://shopify/Customer/${customerId}") {
           id
-          email
           tags
         }
       }
     `;
 
     const response = await axios.post(
-      `https://${shopifyDomain}.myshopify.com/admin/api/2024-04/graphql.json`,
+      `https://${shopifyStore}.myshopify.com/admin/api/2024-04/graphql.json`,
       { query },
       {
         headers: {
@@ -25,16 +26,29 @@ async function getCustomerData(customerId) {
         },
       }
     );
-
-    return response.data.data.customer;
+    return response.data.data.customer?.tags || [];
   } catch (error) {
-    console.error("Error fetching customer:", error.response?.data || error.message);
+    console.error("Shopify Error:", error.response?.data || error.message);
     return null;
   }
 }
 
-// Example usage
-(async () => {
-  const customer = await getCustomerData("1234567890");
-  console.log(customer);
-})();
+async function updateAllCustomerTags() {
+  try {
+    const customers = await Customer.find({ customer_id: { $exists: true } });
+    for (const customer of customers) {
+      const tags = await getCustomerTags(customer.customer_id);
+      if (tags) {
+        customer.tags = tags;
+        await customer.save();
+      }
+    }
+
+    console.log(" All customer tags updated.");
+  } catch (err) {
+    console.error("MongoDB Error:", err);
+  }
+}
+
+updateAllCustomerTags();
+module.exports = { getCustomerTags };
