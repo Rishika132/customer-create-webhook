@@ -38,6 +38,7 @@ async function updateAllCustomerTags() {
   try {
     const customers = await Customer.find({ customer_id: { $exists: true } });
     for (const customer of customers) {
+       await new Promise(r => setTimeout(r, 500));
       const tags = await getCustomerTags(customer.customer_id);
       if (tags) {
         customer.tags = tags;
