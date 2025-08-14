@@ -15,12 +15,12 @@ const WebhookCustomerCreate = async (req, res) => {
       return res.status(400).json({ error: "Missing required customer fields" });
     }
 
-    const existingCustomer = await Customer.findOne({ customer_id: customerId });
+    // const existingCustomer = await Customer.findOne({ customer_id: customerId });
 
-    if (existingCustomer) {
-      await getCustomerTags(customerId); 
-      return res.status(200).json({ message: "Customer already exists. Tags updated." });
-    }
+    // if (existingCustomer) {
+    //   await getCustomerTags(customerId); 
+    //   return res.status(200).json({ message: "Customer already exists. Tags updated." });
+    // }
 
     const newCustomer = new Customer({
       customer_id: customerId,
