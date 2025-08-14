@@ -1,11 +1,30 @@
-const crypto = require('crypto');
+const nodemailer = require ("nodemailer");
+const dotenv = require ("dotenv");
+dotenv.config();
 
-module.exports = function sendEmail(req) {
-  const hmacHeader = req.get('X-Shopify-Hmac-Sha256');
-  const generatedHmac = crypto
-    .createHmac('sha256', process.env.SHOPIFY_API_SECRET)
-    .update(req.rawBody, 'utf8')
-    .digest('base64');
+const sendEmail = (to, subject,html) => {
+    return new Promise((resolve, reject) => {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.GMAIL_ID,
+                pass: process.env.GMAIL_PASSWORD
+            }
+        });
 
-  return hmacHeader === generatedHmac;
-};
+        let mailOptions = {
+            from: process.env.GMAIL_ID,
+            to,
+            subject,
+            html
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                reject(false);
+            } else {
+                resolve(true);
+            }
+        });
+    });
+}
+module.exports = { sendEmail };
