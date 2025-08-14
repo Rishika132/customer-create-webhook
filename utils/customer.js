@@ -6,7 +6,7 @@ async function getCustomerTags(customerId) {
   try {
     const accessToken = process.env.SHOPIFY_ACCESS_TOKEN;
     const shopifyStore = process.env.SHOPIFY_STORE;
-
+    
     const query = `
       {
         customer(id: "gid://shopify/Customer/${customerId}") {
@@ -23,8 +23,7 @@ async function getCustomerTags(customerId) {
         headers: {
           "X-Shopify-Access-Token": accessToken,
           "Content-Type": "application/json",
-        },
-          timeout: 10000,
+        }
       }
     );
     return response.data.data.customer?.tags || [];
