@@ -23,7 +23,7 @@ async function getCustomerTags(customerId) {
         headers: {
           "X-Shopify-Access-Token": accessToken,
           "Content-Type": "application/json",
-        },
+        }
       }
     );
     return response.data.data.customer?.tags || [];
