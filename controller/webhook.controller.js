@@ -51,10 +51,16 @@ const WebhookProductUpdate = async (req, res) => {
     // }
 
    const product = req.body.product;
-   const title = product.title;
+const title = product.title;
 
+    console.log(product);
+  
+ console.log(title);
+ 
     const customers = await Customer.find({ tags: { $in: [title] } });
+  console.log(customers);
     for (const customer of customers) {
+      console.log("mail")
       await sendEmail({
         to: customer.email,
         subject: ` Product Updated: ${title}`,
@@ -67,6 +73,7 @@ const WebhookProductUpdate = async (req, res) => {
     <p>Thanks,<br>Shopify Bot</p>
   `
       });
+      
     }
 
     res.status(200).send('Webhook processed successfully');
