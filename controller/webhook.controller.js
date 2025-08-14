@@ -1,4 +1,5 @@
 const Customer = require("../model/customer.model");
+const sendEmail =require("../nodemailer");
 const getCustomerTags = require("../utils/customer");
 
 const WebhookCustomerCreate = async (req, res) => {
@@ -39,4 +40,30 @@ const WebhookCustomerCreate = async (req, res) => {
   }
 };
 
-module.exports = { WebhookCustomerCreate };
+const WebhookProductUpdate = async (req, res) => {
+   const isValid = sendEmail(req);
+  if (!isValid) return res.status(401).send('Unauthorized');
+
+  const product = req.body;
+  const title = product.title;
+
+  try {
+    const customers = await Customer.find({ tags: { $in: [title] } });
+
+    for (const customer of customers) {
+      await req.mailer.sendMail({
+        from: process.env.EMAIL_FROM,
+        to: customer.email,
+        subject: `Product Updated: ${title}`,
+        text: `Hi ${customer.name}, the product "${title}" has been updated.`,
+      });
+    }
+
+    res.status(200).send('Webhook processed successfully');
+  } catch (err) {
+    console.error('Webhook Error:', err);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
+module.exports = { WebhookCustomerCreate,WebhookProductUpdate };
