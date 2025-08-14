@@ -2,7 +2,7 @@ const nodemailer = require ("nodemailer");
 const dotenv = require ("dotenv");
 dotenv.config();
 
-const sendEmail = (to, subject,html) => {
+const sendEmail = ({to, subject,html}) => {
     return new Promise((resolve, reject) => {
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -20,7 +20,7 @@ const sendEmail = (to, subject,html) => {
         };
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-                reject(false);
+                reject(error);
             } else {
                 resolve(true);
             }
