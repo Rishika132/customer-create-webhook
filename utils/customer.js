@@ -50,4 +50,4 @@ async function updateAllCustomerTags() {
   }
 }
 updateAllCustomerTags();
-module.exports = { getCustomerTags };
+module.exports =  getCustomerTags ;
