@@ -31,7 +31,7 @@ const WebhookCustomerCreate = async (req, res) => {
 
     const savedCustomer = await newCustomer.save();
 
-    await getCustomerTags(customerId); 
+    // await getCustomerTags(customerId); 
     return res.status(200).json({ message: "Customer synced", customer: savedCustomer });
   } catch (err) {
     console.error("Customer Webhook Error:", err.message);
