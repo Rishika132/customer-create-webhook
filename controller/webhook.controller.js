@@ -55,7 +55,7 @@ const WebhookProductUpdate = async (req, res) => {
     const title = product.title;
 
     const customers = await Customer.find({ tags: { $in: [title] } });
-
+    console.log(customers);
     for (const customer of customers) {
       await sendEmail({
         to: customer.email,
