@@ -51,6 +51,7 @@ const WebhookProductUpdate = async (req, res) => {
     }
 
     const product = req.body;
+    console.log(product);
     const title = product.title;
 
     const customers = await Customer.find({ tags: { $in: [title] } });
