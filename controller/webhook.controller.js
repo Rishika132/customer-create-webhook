@@ -1,5 +1,5 @@
 const Customer = require("../model/customer.model");
-const sendEmail =require("../nodemailer");
+const sendEmail = require("../nodemailer");
 const getCustomerTags = require("../utils/customer");
 
 const WebhookCustomerCreate = async (req, res) => {
@@ -19,7 +19,7 @@ const WebhookCustomerCreate = async (req, res) => {
     const existingCustomer = await Customer.findOne({ customer_id: customerId });
 
     if (existingCustomer) {
-      await getCustomerTags(customerId); 
+      await getCustomerTags(customerId);
       return res.status(200).json({ message: "Customer already exists. Tags updated." });
     }
 
@@ -32,7 +32,7 @@ const WebhookCustomerCreate = async (req, res) => {
 
     const savedCustomer = await newCustomer.save();
 
-    await getCustomerTags(customerId); 
+    await getCustomerTags(customerId);
     return res.status(200).json({ message: "Customer synced", customer: savedCustomer });
   } catch (err) {
     console.error("Customer Webhook Error:", err.message);
@@ -41,13 +41,13 @@ const WebhookCustomerCreate = async (req, res) => {
 };
 
 const WebhookProductUpdate = async (req, res) => {
-   const isValid = sendEmail(req);
-  if (!isValid) return res.status(401).send('Unauthorized');
-
-  const product = req.body;
-  const title = product.title;
 
   try {
+    const isValid = await sendEmail(req);
+    if (!isValid) return res.status(401).send('Unauthorized');
+    const product = req.body;
+    const title = product.title;
+
     const customers = await Customer.find({ tags: { $in: [title] } });
 
     for (const customer of customers) {
@@ -72,4 +72,4 @@ const WebhookProductUpdate = async (req, res) => {
   }
 }
 
-module.exports = { WebhookCustomerCreate,WebhookProductUpdate };
+module.exports = { WebhookCustomerCreate, WebhookProductUpdate };
